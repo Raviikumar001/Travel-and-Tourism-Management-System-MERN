@@ -1,6 +1,19 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import {
+  CalendarCheck,
+  CreditCard,
+  History as HistoryIcon,
+  LogOut,
+  PackagePlus,
+  Pencil,
+  Shield,
+  Star,
+  Trash2,
+  UserCircle,
+  Users,
+} from "lucide-react";
 import {
   updateUserStart,
   updateUserSuccess,
@@ -149,230 +162,202 @@ const AdminDashboard = () => {
     }
   };
 
+  const adminPanels = [
+    { id: 1, label: "Bookings", icon: CalendarCheck },
+    { id: 2, label: "Add Packages", icon: PackagePlus },
+    { id: 3, label: "All Packages", icon: PackagePlus },
+    { id: 4, label: "Users", icon: Users },
+    { id: 5, label: "Payments", icon: CreditCard },
+    { id: 6, label: "Ratings/Reviews", icon: Star },
+    { id: 7, label: "History", icon: HistoryIcon },
+  ];
+
+  const activePanel =
+    adminPanels.find((panel) => panel.id === activePanelId) ||
+    (activePanelId === 8 && { label: "Edit Profile" }) ||
+    { label: "Dashboard" };
+
+  const renderActivePanel = () => {
+    if (activePanelId === 1) return <AllBookings />;
+    if (activePanelId === 2) return <AddPackages />;
+    if (activePanelId === 3) return <AllPackages />;
+    if (activePanelId === 4) return <AllUsers />;
+    if (activePanelId === 5) return <Payments />;
+    if (activePanelId === 6) return <RatingsReviews />;
+    if (activePanelId === 7) return <History />;
+    if (activePanelId === 8) return <AdminUpdateProfile />;
+    return <div>Page Not Found!</div>;
+  };
+
   return (
-    <div className="flex w-full flex-wrap max-sm:flex-col p-2">
+    <div className="min-h-screen w-full bg-slate-100 p-3 sm:p-5 lg:p-8">
       {currentUser ? (
-        <>
-          <div className="w-[35%] p-3 max-sm:w-full">
-            <div className="flex flex-col items-center gap-4 p-3">
-              <div className="w-full flex flex-col items-center relative">
-                <img
-                  src={
-                    (profilePhoto && URL.createObjectURL(profilePhoto)) ||
-                    formData.avatar
-                  }
-                  alt="Profile photo"
-                  className="w-64 min-h-52 max-h-64 rounded-lg"
-                  onClick={() => fileRef.current.click()}
-                  onMouseOver={() => {
-                    document
-                      .getElementById("photoLabel")
-                      .classList.add("block");
-                  }}
-                  onMouseOut={() => {
-                    document
-                      .getElementById("photoLabel")
-                      .classList.remove("block");
-                  }}
-                />
-                <input
-                  type="file"
-                  name="photo"
-                  id="photo"
-                  hidden
-                  ref={fileRef}
-                  accept="image/*"
-                  onChange={(e) => setProfilePhoto(e.target.files[0])}
-                />
-                <label
-                  htmlFor="photo"
-                  id="photoLabel"
-                  className="w-64 bg-slate-300 absolute bottom-0 p-2 text-center text-lg text-white font-semibold rounded-b-lg"
-                  hidden
-                >
-                  Choose Photo
-                </label>
+        <div className="mx-auto flex w-full max-w-7xl flex-col gap-5 lg:flex-row">
+          <aside className="w-full lg:w-[330px] lg:shrink-0">
+            <div className="sticky top-5 overflow-hidden rounded-3xl border border-white/70 bg-white shadow-xl shadow-slate-200">
+              <div className="bg-gradient-to-br from-slate-800 via-slate-700 to-blue-700 p-5 text-white">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/15">
+                    <Shield size={24} />
+                  </div>
+                  <div>
+                    <p className="text-sm uppercase tracking-[0.25em] text-blue-100">
+                      Admin
+                    </p>
+                    <h1 className="text-2xl font-bold">Dashboard</h1>
+                  </div>
+                </div>
               </div>
-              {profilePhoto && (
-                <div className="flex w-full justify-between gap-1">
+
+              <div className="flex flex-col gap-5 p-5">
+                <div className="flex flex-col items-center gap-3">
                   <button
-                    onClick={() => handleProfilePhoto(profilePhoto)}
-                    className="bg-green-700 p-2 text-white mt-3 flex-1 hover:opacity-90"
+                    type="button"
+                    onClick={() => fileRef.current.click()}
+                    className="group relative h-44 w-44 overflow-hidden rounded-3xl border border-slate-200 bg-slate-100 shadow-inner"
+                    aria-label="Choose profile photo"
                   >
-                    {loading ? `Uploading...(${photoPercentage}%)` : "Upload"}
+                    {profilePhoto || formData.avatar ? (
+                      <img
+                        src={
+                          (profilePhoto && URL.createObjectURL(profilePhoto)) ||
+                          formData.avatar
+                        }
+                        alt="Profile photo"
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center text-slate-400">
+                        <UserCircle size={96} strokeWidth={1.4} />
+                      </div>
+                    )}
+                    <span className="absolute inset-x-0 bottom-0 bg-slate-950/70 py-2 text-sm font-semibold text-white opacity-0 transition-opacity group-hover:opacity-100">
+                      Change Photo
+                    </span>
+                  </button>
+                  <input
+                    type="file"
+                    name="photo"
+                    id="photo"
+                    hidden
+                    ref={fileRef}
+                    accept="image/*"
+                    onChange={(e) => setProfilePhoto(e.target.files[0])}
+                  />
+
+                  {profilePhoto && (
+                    <button
+                      onClick={() => handleProfilePhoto(profilePhoto)}
+                      className="w-full rounded-xl bg-green-600 px-4 py-2 font-semibold text-white shadow-md shadow-green-100 transition hover:bg-green-700 disabled:opacity-70"
+                      disabled={loading}
+                    >
+                      {loading ? `Uploading...(${photoPercentage}%)` : "Upload Photo"}
+                    </button>
+                  )}
+                </div>
+
+                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                  <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500">
+                    Profile
+                  </p>
+                  <h2 className="mt-2 break-words text-2xl font-bold text-slate-900">
+                    Hi {currentUser.username}!
+                  </h2>
+                  <div className="mt-4 space-y-3 text-sm text-slate-600">
+                    <p className="break-all">
+                      <span className="font-semibold text-slate-900">Email:</span>{" "}
+                      {currentUser.email || "Not added"}
+                    </p>
+                    <p>
+                      <span className="font-semibold text-slate-900">Phone:</span>{" "}
+                      {currentUser.phone || "Not added"}
+                    </p>
+                    <p className="break-words">
+                      <span className="font-semibold text-slate-900">Address:</span>{" "}
+                      {currentUser.address || "Not added"}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    onClick={() => setActivePanelId(8)}
+                    className="flex items-center justify-center gap-2 rounded-xl bg-slate-900 px-3 py-2 text-sm font-semibold text-white transition hover:bg-slate-700"
+                  >
+                    <Pencil size={16} />
+                    Edit
+                  </button>
+                  <button
+                    onClick={handleLogout}
+                    className="flex items-center justify-center gap-2 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm font-semibold text-red-600 transition hover:bg-red-600 hover:text-white"
+                  >
+                    <LogOut size={16} />
+                    Logout
                   </button>
                 </div>
-              )}
-              <p
-                style={{
-                  width: "100%",
-                  borderBottom: "1px solid black",
-                  lineHeight: "0.1em",
-                  margin: "10px",
-                }}
-              >
-                <span className="font-semibold" style={{ background: "#fff" }}>
-                  Details
-                </span>
-              </p>
-              <div className="w-full flex justify-between px-1">
+
                 <button
-                  onClick={handleLogout}
-                  className="text-red-600 text-lg font-semibold self-start border border-red-600 p-1 rounded-lg hover:bg-red-600 hover:text-white"
+                  onClick={handleDeleteAccount}
+                  className="flex items-center justify-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold text-red-600 transition hover:bg-red-50"
                 >
-                  Log-out
-                </button>
-                <button
-                  onClick={() => setActivePanelId(8)}
-                  className="text-white text-lg self-end bg-gray-500 p-1 rounded-lg hover:bg-gray-700"
-                >
-                  Edit Profile
+                  <Trash2 size={16} />
+                  Delete account
                 </button>
               </div>
-              <div className="w-full shadow-2xl rounded-lg p-3 break-all">
-                <p className="text-3xl font-semibold m-1">
-                  Hi {currentUser.username} !
-                </p>
-                <p className="text-lg font-semibold">
-                  Email:{currentUser.email}
-                </p>
-                <p className="text-lg font-semibold">
-                  Phone:{currentUser.phone}
-                </p>
-                <p className="text-lg font-semibold">
-                  Address:{currentUser.address}
-                </p>
-              </div>
-              <button
-                onClick={handleDeleteAccount}
-                className="text-red-600 hover:underline"
-              >
-                Delete account
-              </button>
             </div>
-          </div>
-          {/* ---------------------------------------------------------------------------------------- */}
-          <div className="w-[65%] max-sm:w-full">
-            <div className="main-div">
-              <nav className="w-full border-blue-500 border-b-4 overflow-x-auto navbar">
-                <div className="w-full flex gap-2">
-                  <button
-                    className={
-                      activePanelId === 1
-                        ? "p-1 rounded-t transition-all duration-300 text-nowrap bg-blue-500 text-white"
-                        : "p-1 rounded-t transition-all duration-300 text-nowrap"
-                    }
-                    id="bookings"
-                    onClick={() => setActivePanelId(1)}
-                  >
-                    Bookings
-                  </button>
-                  <button
-                    className={
-                      activePanelId === 2
-                        ? "p-1 rounded-t transition-all duration-300 text-nowrap bg-blue-500 text-white"
-                        : "p-1 rounded-t transition-all duration-300 text-nowrap"
-                    }
-                    id="bookings"
-                    onClick={() => setActivePanelId(2)}
-                  >
-                    Add Packages
-                  </button>
-                  <button
-                    className={
-                      activePanelId === 3
-                        ? "p-1 rounded-t transition-all duration-300 text-nowrap bg-blue-500 text-white"
-                        : "p-1 rounded-t transition-all duration-300 text-nowrap"
-                    }
-                    id="bookings"
-                    onClick={() => setActivePanelId(3)}
-                  >
-                    All Packages
-                  </button>
-                  <button
-                    className={
-                      activePanelId === 4
-                        ? "p-1 rounded-t transition-all duration-300 text-nowrap bg-blue-500 text-white"
-                        : "p-1 rounded-t transition-all duration-300 text-nowrap"
-                    }
-                    id="bookings"
-                    onClick={() => setActivePanelId(4)}
-                  >
-                    Users
-                  </button>
-                  <button
-                    className={
-                      activePanelId === 5
-                        ? "p-1 rounded-t transition-all duration-300 text-nowrap bg-blue-500 text-white"
-                        : "p-1 rounded-t transition-all duration-300 text-nowrap"
-                    }
-                    id="bookings"
-                    onClick={() => setActivePanelId(5)}
-                  >
-                    Payments
-                  </button>
-                  <button
-                    className={
-                      activePanelId === 6
-                        ? "p-1 rounded-t transition-all duration-300 text-nowrap bg-blue-500 text-white"
-                        : "p-1 rounded-t transition-all duration-300 text-nowrap"
-                    }
-                    id="bookings"
-                    onClick={() => setActivePanelId(6)}
-                  >
-                    Ratings/Reviews
-                  </button>
-                  <button
-                    className={
-                      activePanelId === 7
-                        ? "p-1 rounded-t transition-all duration-300 text-nowrap bg-blue-500 text-white"
-                        : "p-1 rounded-t transition-all duration-300 text-nowrap"
-                    }
-                    id="bookings"
-                    onClick={() => setActivePanelId(7)}
-                  >
-                    History
-                  </button>
-                  {/* <button
-                    className={
-                      activePanelId === 7
-                        ? "p-1 rounded-t transition-all duration-300 text-nowrap bg-blue-500 text-white"
-                        : "p-1 rounded-t transition-all duration-300 text-nowrap"
-                    }
-                    id="updateProfile"
-                    onClick={() => setActivePanelId(7)}
-                  >
-                    Update Profile
-                  </button> */}
+          </aside>
+
+          <main className="min-w-0 flex-1 rounded-3xl border border-white/70 bg-white shadow-xl shadow-slate-200">
+            <div className="border-b border-slate-200 p-4 sm:p-6">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                  <p className="text-sm font-semibold uppercase tracking-[0.2em] text-blue-600">
+                    Manage Platform
+                  </p>
+                  <h2 className="mt-1 text-2xl font-bold text-slate-900 sm:text-3xl">
+                    {activePanel.label}
+                  </h2>
+                </div>
+                <p className="max-w-md text-sm text-slate-500">
+                  Use the sections below to manage bookings, packages, users,
+                  payments, reviews, and account settings.
+                </p>
+              </div>
+
+              <nav className="mt-5 overflow-x-auto pb-1">
+                <div className="flex w-max gap-2">
+                  {adminPanels.map((panel) => {
+                    const Icon = panel.icon;
+                    const isActive = activePanelId === panel.id;
+
+                    return (
+                      <button
+                        key={panel.id}
+                        type="button"
+                        onClick={() => setActivePanelId(panel.id)}
+                        className={`flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition ${
+                          isActive
+                            ? "bg-blue-600 text-white shadow-lg shadow-blue-100"
+                            : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                        }`}
+                      >
+                        <Icon size={17} />
+                        <span className="text-nowrap">{panel.label}</span>
+                      </button>
+                    );
+                  })}
                 </div>
               </nav>
-              <div className="content-div flex flex-wrap">
-                {activePanelId === 1 ? (
-                  <AllBookings />
-                ) : activePanelId === 2 ? (
-                  <AddPackages />
-                ) : activePanelId === 3 ? (
-                  <AllPackages />
-                ) : activePanelId === 4 ? (
-                  <AllUsers />
-                ) : activePanelId === 5 ? (
-                  <Payments />
-                ) : activePanelId === 6 ? (
-                  <RatingsReviews />
-                ) : activePanelId === 7 ? (
-                  <History />
-                ) : activePanelId === 8 ? (
-                  <AdminUpdateProfile />
-                ) : (
-                  <div>Page Not Found!</div>
-                )}
-              </div>
             </div>
-          </div>
-        </>
+
+            <div className="content-div min-h-[520px] overflow-x-auto p-3 sm:p-5">
+              {renderActivePanel()}
+            </div>
+          </main>
+        </div>
       ) : (
-        <div>
-          <p className="text-red-700">Login First</p>
+        <div className="mx-auto mt-10 max-w-md rounded-2xl bg-white p-6 text-center shadow-lg">
+          <p className="font-semibold text-red-700">Login First</p>
         </div>
       )}
     </div>
