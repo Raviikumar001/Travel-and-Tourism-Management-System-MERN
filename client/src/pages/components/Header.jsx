@@ -1,19 +1,25 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { LogIn } from "lucide-react";
 import defaultProfileImg from "../../assets/images/profile.png";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
+  const navigate = useNavigate();
   const { currentUser } = useSelector((state) => state.user);
   return (
     <>
       <div className="bg-slate-400 p-4 flex justify-between items-center">
         <h1
-          className="h-min text-4xl font-bold relative"
+          className="h-min text-4xl font-bold relative cursor-pointer"
           style={{
             color: "transparent",
             WebkitTextStroke: "0.7px",
             WebkitTextStrokeColor: "#fff",
+          }}
+          onClick={() => {
+            navigate(`/`);
           }}
         >
           Come
@@ -50,7 +56,14 @@ const Header = () => {
                 />
               </Link>
             ) : (
-              <Link to={`/login`}>Login</Link>
+              <Link
+                to={`/login`}
+                aria-label="Login"
+                title="Login"
+                className="flex items-center justify-center hover:scale-110 transition-transform duration-150"
+              >
+                <LogIn size={26} strokeWidth={2.5} />
+              </Link>
             )}
           </li>
         </ul>
