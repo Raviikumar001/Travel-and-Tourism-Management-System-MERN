@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import defaultPackageImage from "../../assets/images/bg_jmg1.jpg";
 
 const AllPackages = () => {
   const [packages, setPackages] = useState([]);
@@ -154,7 +155,7 @@ const AllPackages = () => {
               >
                 <Link to={`/package/${pack._id}`}>
                   <img
-                    src={pack?.packageImages[0]}
+                    src={pack?.packageImages?.[0] || defaultPackageImage}
                     alt="image"
                     className="w-20 h-20 rounded"
                   />

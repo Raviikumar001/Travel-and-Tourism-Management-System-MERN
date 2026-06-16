@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Chart from "../components/Chart";
+import defaultPackageImage from "../../assets/images/bg_jmg1.jpg";
 
 const AllBookings = () => {
   const { currentUser } = useSelector((state) => state.user);
@@ -86,7 +87,7 @@ const AllBookings = () => {
                 <Link to={`/package/${booking?.packageDetails?._id}`}>
                   <img
                     className="w-12 h-12"
-                    src={booking?.packageDetails?.packageImages[0]}
+                    src={booking?.packageDetails?.packageImages?.[0] || defaultPackageImage}
                     alt="Package Image"
                   />
                 </Link>

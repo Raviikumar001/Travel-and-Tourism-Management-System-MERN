@@ -17,6 +17,7 @@ import {
 import Rating from "@mui/material/Rating";
 import { useSelector } from "react-redux";
 import RatingCard from "./RatingCard";
+import defaultPackageImage from "../assets/images/bg_jmg1.jpg";
 
 const Package = () => {
   SwiperCore.use([Navigation]);
@@ -187,7 +188,10 @@ const Package = () => {
       {packageData && !loading && !error && (
         <div className="w-full">
           <Swiper navigation>
-            {packageData?.packageImages.map((imageUrl, i) => (
+            {(packageData?.packageImages?.length
+              ? packageData.packageImages
+              : [defaultPackageImage]
+            ).map((imageUrl, i) => (
               <SwiperSlide key={i}>
                 <div
                   className="h-[400px]"

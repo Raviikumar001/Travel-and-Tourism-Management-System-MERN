@@ -1,8 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { LogIn } from "lucide-react";
-import defaultProfileImg from "../../assets/images/profile.png";
+import { LogIn, UserCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const Header = () => {
@@ -49,11 +48,19 @@ const Header = () => {
                   currentUser.user_role === 1 ? "admin" : "user"
                 }`}
               >
-                <img
-                  src={currentUser.avatar || defaultProfileImg}
-                  alt={currentUser.username}
-                  className="border w-10 h-10 border-black rounded-[50%]"
-                />
+                {currentUser.avatar ? (
+                  <img
+                    src={currentUser.avatar}
+                    alt={currentUser.username}
+                    className="border w-10 h-10 border-black rounded-[50%]"
+                  />
+                ) : (
+                  <UserCircle
+                    aria-label={currentUser.username || "User profile"}
+                    className="w-10 h-10 text-white"
+                    strokeWidth={1.8}
+                  />
+                )}
               </Link>
             ) : (
               <Link

@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router";
 import DropIn from "braintree-web-drop-in-react";
 import axios from "axios";
+import defaultPackageImage from "../../assets/images/bg_jmg1.jpg";
 
 const Booking = () => {
   const { currentUser } = useSelector((state) => state.user);
@@ -210,7 +211,7 @@ const Booking = () => {
               <div className="flex flex-wrap gap-2">
                 <img
                   className="w-28"
-                  src={packageData.packageImages[0]}
+                  src={packageData.packageImages?.[0] || defaultPackageImage}
                   alt="Package image"
                 />
                 <div>

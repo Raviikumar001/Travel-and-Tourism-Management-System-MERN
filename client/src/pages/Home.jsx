@@ -14,6 +14,11 @@ const Home = () => {
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
 
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    navigate(`/search?searchTerm=${encodeURIComponent(search.trim())}`);
+  };
+
   const getTopPackages = useCallback(async () => {
     try {
       setLoading(true);
@@ -88,7 +93,10 @@ const Home = () => {
           <h1 className="text-white text-sm text-center xsm:text-lg font-semibold">
             Make Your Travel Dream Come True With Our Amazing Packages
           </h1>
-          <div className="w-full flex justify-center items-center gap-2 mt-8">
+          <form
+            onSubmit={handleSearchSubmit}
+            className="w-full flex justify-center items-center gap-2 mt-8"
+          >
             <input
               type="text"
               className="rounded-lg outline-none w-[230px] sm:w-2/5 p-2 border border-black bg-opacity-40 bg-white text-white placeholder:text-white font-semibold"
@@ -99,15 +107,13 @@ const Home = () => {
               }}
             />
             <button
-              onClick={() => {
-                navigate(`/search?searchTerm=${search}`);
-              }}
+              type="submit"
               className="bg-white w-10 h-10 flex justify-center items-center text-xl font-semibold rounded-full hover:scale-95"
             >
               Go
               {/* <FaSearch className="" /> */}
             </button>
-          </div>
+          </form>
           <div className="w-[90%] max-w-xl flex justify-center mt-10">
             <button
               onClick={() => {

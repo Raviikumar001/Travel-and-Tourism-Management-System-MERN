@@ -15,6 +15,15 @@ const Search = () => {
   const [showMoreBtn, setShowMoreBtn] = useState(false);
   //   console.log(listings);
 
+  const updateSearchParams = (searchData) => {
+    const urlParams = new URLSearchParams();
+    urlParams.set("searchTerm", searchData.searchTerm);
+    urlParams.set("offer", searchData.offer);
+    urlParams.set("sort", searchData.sort);
+    urlParams.set("order", searchData.order);
+    navigate(`/search?${urlParams.toString()}`);
+  };
+
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
     const searchTermFromUrl = urlParams.get("searchTerm");
@@ -26,7 +35,7 @@ const Search = () => {
       setSideBarSearchData({
         searchTerm: searchTermFromUrl || "",
         offer: offerFromUrl === "true" ? true : false,
-        sort: sortFromUrl || "created_at",
+        sort: sortFromUrl || "createdAt",
         order: orderFromUrl || "desc",
       });
     }
@@ -67,24 +76,19 @@ const Search = () => {
       });
     }
     if (e.target.id === "sort_order") {
-      const sort = e.target.value.split("_")[0] || "created_at";
+      const sort = e.target.value.split("_")[0] || "createdAt";
 
       const order = e.target.value.split("_")[1] || "desc";
 
-      setSideBarSearchData({ ...sideBarSearchData, sort, order });
+      const nextSearchData = { ...sideBarSearchData, sort, order };
+      setSideBarSearchData(nextSearchData);
+      updateSearchParams(nextSearchData);
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const urlParams = new URLSearchParams();
-    urlParams.set("searchTerm", sideBarSearchData.searchTerm);
-    urlParams.set("offer", sideBarSearchData.offer);
-    urlParams.set("sort", sideBarSearchData.sort);
-    urlParams.set("order", sideBarSearchData.order);
-    const searchQuery = urlParams.toString();
-    navigate(`/search?${searchQuery}`);
+    updateSearchParams(sideBarSearchData);
   };
 
   const onShowMoreSClick = async () => {

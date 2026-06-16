@@ -2,6 +2,7 @@ import { Rating } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { FaClock } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import defaultPackageImage from "../assets/images/bg_jmg1.jpg";
 
 const PackageCard = ({ packageData }) => {
   return (
@@ -9,7 +10,7 @@ const PackageCard = ({ packageData }) => {
       <div className="w-full bg-white border flex flex-col items-center p-3 rounded shadow-md overflow-hidden">
         <img
           className="w-full h-[220px] rounded border hover:scale-110  transition-all duration-300"
-          src={packageData.packageImages[0]}
+          src={packageData.packageImages?.[0] || defaultPackageImage}
           alt="Package Image"
         />
         <div className="w-full flex flex-col my-2">
@@ -48,7 +49,7 @@ const PackageCard = ({ packageData }) => {
                 ({packageData.packageTotalRatings})
               </p>
             )}
-            {packageData.offer && packageData.packageDiscountPrice ? (
+            {packageData.packageOffer && packageData.packageDiscountPrice ? (
               <p className="flex gap-1">
                 <span className="line-through text-gray-700">
                   ${packageData.packagePrice}
