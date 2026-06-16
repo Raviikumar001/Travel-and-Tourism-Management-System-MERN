@@ -7,11 +7,16 @@ import { initializeApp } from "firebase/app";
 //temporary souls firebase
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: "mern-travel-tourism.firebaseapp.com",
-  projectId: "mern-travel-tourism",
-  storageBucket: "mern-travel-tourism.appspot.com",
-  messagingSenderId: "304378877141",
-  appId: "1:304378877141:web:3bddab2778ca23186f7e5c",
+  authDomain:
+    import.meta.env.VITE_FIREBASE_AUTH_DOMAIN ||
+    "mern-travel-tourism.firebaseapp.com",
+  projectId: import.meta.env.VITE_FIREBASE_PROJECTID || "mern-travel-tourism",
+  storageBucket:
+    import.meta.env.VITE_FIREBASE_STORAGE_BUCKET ||
+    "mern-travel-tourism.appspot.com",
+  messagingSenderId: import.meta.env.VITE_MESSAGING_SENDER_ID || "304378877141",
+  appId:
+    import.meta.env.VITE_APP_ID || "1:304378877141:web:3bddab2778ca23186f7e5c",
 };
 
 // Initialize Firebase
